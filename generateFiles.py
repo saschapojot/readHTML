@@ -74,6 +74,7 @@ for i in range(0,len(subPagesAll)):
         expressionPattern =re.compile("<SPAN class=irred>.*?</SPAN>\s+(\d*[a-zA-Z]+(?:\+\d*[a-zA-Z]+)*)?<SPAN class=obs>((?:\+?\d*[a-zA-Z]+)+)</SPAN>")
         spanPattern = re.compile("<SPAN.*?/SPAN>")
         spanOverPattern = re.compile("(<SPAN class=over>)(.*?)(</SPAN>)")
+        spanNumSpanPattern = re.compile("&radic;<SPAN class=over>(\d+)</SPAN>")
         for lineTmp in tableLines:
             lineList=[]
             matchName=re.search(namePattern,lineTmp)
@@ -91,6 +92,14 @@ for i in range(0,len(subPagesAll)):
                 # expressionFormula = matchExpression.group(1) + matchExpression.group(2)
                 print(expressionFormula)
             lineList.append(expressionFormula)
+            #match &radic;<SPAN class=over>(\d+)</SPAN>
+            def replacement_function(match):
+                # Extract the first group (the digit(s)) from the match
+                number = match.group(1)
+                # Construct and return the replacement string
+                return f"&radic;<SPAN class=over>{{{number}}}</SPAN>"
+            lineTmp=re.sub(spanNumSpanPattern,replacement_function,lineTmp)
+
             #remove <SPAN class=over>.*?</Span>
             matchOver=re.findall(spanOverPattern,lineTmp)
             def replacement(match):
@@ -152,7 +161,7 @@ for i in range(0,len(subPagesAll)):
 
                     # mt2=matchSqrt.group(2)
                     # print("mt2=" + mt2)
-                    oneSpanStr=re.sub(mt1,"\\\sqrt{",oneSpanStr)
+                    oneSpanStr=re.sub(mt1,"\\\\sqrt",oneSpanStr)
                     # oneSpanStr=re.sub(mt2,mt2+"}",oneSpanStr)
                     # print("after replacing sqrt: ",oneSpanStr)
                     # print("------------")
