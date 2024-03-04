@@ -115,7 +115,7 @@ def replace(oneSpanStr):
     for span in spSpan.find_all("span"):
         span.unwrap()
     stripped=str(spSpan)
-    print(stripped)
+    return stripped
 
     # matchSpClass=re.findall(spanClassPattern,oneSpanStr)
     #
